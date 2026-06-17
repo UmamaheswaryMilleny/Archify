@@ -1,15 +1,13 @@
 
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 
-type ButtonVariant = "primary" | "secondary" | "tertiary";
+type ButtonVariant = "primary" | "secondary" | "ghost" | "outline" ;
 type ButtonSize = "sm" | "md" | "lg";
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
   size?: ButtonSize;
   fullWidth?: boolean;
-  className?: string;
-  children: ReactNode;
 }
 
 const Button = ({
@@ -20,18 +18,17 @@ const Button = ({
   children,
   ...props
 }: ButtonProps) => {
-  const combinedClassName = [
-    "btn",
-    `btn--${variant}`,
-    `btn--${size}`,
-    fullWidth && "btn--full-width",
-    className,
-  ]
-    .filter(Boolean)
-    .join(" ");
+  const baseClass ='btn';
+  const variantclass = `btn--${variant}`;
+  const sizeClass = `btn--${size}`;
+  const fullWidthClass = fullWidth?'btn--full':'';
+
+  const combinedClasses = [
+    baseClass,variantclass,sizeClass,fullWidthClass,className
+  ].filter(Boolean).join(' ')
 
   return (
-    <button {...props} className={combinedClassName}>
+    <button {...props} className={combinedClasses}>
       {children}
     </button>
   );
