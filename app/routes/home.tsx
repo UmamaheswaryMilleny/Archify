@@ -5,6 +5,8 @@ import Button from "../../components/ui/Button";
 import { Clock } from "lucide-react";
 import Upload from "../../components/Upload";
 import { useNavigate } from "react-router";
+import { useState,useRef,useEffect } from "react";
+import { createProject } from "../../lib/puter.action";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -15,10 +17,38 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   const navigate = useNavigate();
+  const [projects,setProjects]=useState<DesignItem[]>([]);
+
 
   const handleUploadComplete = async(base64Image:string)=>{
     const newId=Date.now().toString();
-    navigate(`/visualizer/${newId}`)
+const name=`Residence ${newId}`;
+
+const newItem={
+  id:newId,name,sourceImage:base64Image,
+  renderedImage:undefined,
+  timeStamp:Date.now()
+}
+
+const saved = await createProject({item:newItem,visibility:'private'})
+
+if(!saved){
+  console.error('Failed to create project')
+  return false
+}
+
+
+setProjects((prev)=>[newItem,...prev])
+
+
+
+    navigate(`/visualizer/${newId}`,{
+      state:{
+        initialImage:saved.sourceImage,
+        initialRendered:saved.renderedImage || null,
+        name
+      }
+    })
     return true
   }
   return <div className="home">
@@ -66,9 +96,33 @@ export default function Home() {
         </div>
       </div>
       <div className="projects-grid">
+{projects.map({id,name,renderedImage,sourceImage,timestamp})=>(
+   <div className="project-card group">
+          <div className="preview">
+            <img src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png" alt="Project"/>
+            <div className="badge">
+              <span>Community</span>
+            </div>
+          </div>
+          <div className="card-body">
+            <div>
+              <h3>Project Manhattan</h3>
+              <div className="meta">
+                <Clock size={12}/>
+                <span>{new Date('01.01.2027').toLocaleDateString()}</span>
+                <span>By Js Mastery</span>
+              </div>
+            </div>
+            <div className="arrow">
+            <ArrowUpRight size={18}/>  
+            </div>
+          </div>
+        </div>
+)}
+
         <div className="project-card group">
           <div className="preview">
-            <img src="" alt="Project"/>
+            <img src="https://roomify-mlhuk267-dfwu1i.puter.site/projects/1770803585402/rendered.png" alt="Project"/>
             <div className="badge">
               <span>Community</span>
             </div>
