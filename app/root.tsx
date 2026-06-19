@@ -5,13 +5,16 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useSearchParams,
 } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
-import { useEffect, useState } from "react";
-import { getCurrentUser,signIn as puterSignIn,  signOut as puterSignOut, signIn, signOut } from "../lib/puter.action";
+import {useEffect, useState} from "react";
+import {
+    getCurrentUser,
+    signIn as puterSignIn,
+    signOut as puterSignOut,
+} from "../lib/puter.action";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -44,48 +47,53 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
-
-const DEFAULT_AUTH_STATE:AuthState={
-  isSignedIn:false,
-  userName:null,
-  userId:null
+const DEFAULT_AUTH_STATE: AuthState = {
+    isSignedIn: false,
+    userName: null,
+    userId: null,
 }
-
 
 export default function App() {
-const [authState,setAuthState]=useState<AuthState>(DEFAULT_AUTH_STATE);
-const refreshAuth = async ()=>{
-  try{
-    const user = await getCurrentUser();
-    setAuthState({
-      isSignedIn:!!user,
-      userName:user?.username||null,
-      userId:user?.uuid || null,
-    })
-    return !!user;
-  }catch{
-    setAuthState(DEFAULT_AUTH_STATE);
-    return false
-  }
-}
+    const [authState, setAuthState] = useState<AuthState>(DEFAULT_AUTH_STATE);
 
-useEffect(()=>{
- refreshAuth()
-},[])
+    const refreshAuth = async () => {
+        try {
+            const user = await getCurrentUser();
 
-const SignIn = async()=>{
-  await puterSignIn;
-  return await refreshAuth()
-}
-const SignOut = async()=>{
-  puterSignOut;
-  return await refreshAuth()
-}
+            setAuthState({
+                isSignedIn: !!user,
+                userName: user?.username || null,
+                userId: user?.uuid || null,
+            });
 
+            return !!user;
+        } catch {
+            setAuthState(DEFAULT_AUTH_STATE);
+            return false;
+        }
+    }
 
-  return <main className="min-h-screen bg-background text-foreground relative z-10">
-    <Outlet context={{...authState, refreshAuth,signIn,signOut}}/>
-  </main>;
+    useEffect(() => {
+        refreshAuth()
+    }, []);
+
+    const signIn = async () => {
+        await puterSignIn();
+        return await refreshAuth();
+    }
+
+    const signOut = async () => {
+        puterSignOut();
+        return await refreshAuth();
+    }
+
+  return (
+      <main className="min-h-screen bg-background text-foreground relative z-10">
+        <Outlet
+            context={{ ...authState, refreshAuth, signIn, signOut }}
+        />;
+      </main>
+  )
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {

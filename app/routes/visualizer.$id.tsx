@@ -1,9 +1,11 @@
- import React, { useEffect } from 'react'
-import { useLocation, useNavigate } from 'react-router'
-import { useRef,useState } from 'react'
+ import { useLocation, useNavigate } from 'react-router'
+import { useRef,useState,useEffect } from 'react'
 import { generate3DView } from '../../lib/ai.action'
 import { Box ,X} from 'lucide-react'
 import Button from '../../components/ui/Button'
+import { createProject,getProjectById } from '../../lib/puter.action'
+// import {ReactCompareSlider,ReactCompareSliderImage}
+
 
 const visualizerId= () => {
   const navigate = useNavigate()
