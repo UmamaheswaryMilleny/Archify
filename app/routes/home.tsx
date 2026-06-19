@@ -80,13 +80,13 @@ export default function Home() {
             <div className="pulse"></div>
           </div>
 
-          <p>Introducing Roomify 2.0</p>
+          <p>Introducing Archify 2.0</p>
         </div>
 
-        <h1>Build beautiful spaces at the speed of thought with Roomify</h1>
+        <h1>Build beautiful spaces at the speed of thought with Archify</h1>
 
         <p className="subtitle">
-          Roomify is an AI-first design environment that helps you visualize,
+          Archify is an AI-first design environment that helps you visualize,
           render, and ship architectural projects faster than ever.
         </p>
 
@@ -153,7 +153,7 @@ export default function Home() {
                       <div className="meta">
                         <Clock size={12} />
                         <span>{new Date(timestamp).toLocaleDateString()}</span>
-                        <span>By JS Mastery</span>
+
                       </div>
                     </div>
                     <div className="arrow">
